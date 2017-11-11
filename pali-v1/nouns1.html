@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<HTML>
+
+<HEAD>
+
+<TITLE>P&#x0101;li Nouns</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<SCRIPT src="js/math.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/noun.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/nouns.js" type="text/javascript"></SCRIPT>
+  
+<SCRIPT type="text/javascript">
+  
+var clearChildrenAndGet = function(name) {
+	var node = document.getElementById(name);
+	while (node.firstChild) {
+		node.removeChild(node.firstChild);
+	}
+	return node;
+}
+
+var script = new PaliScript();
+var nouns = new Nouns();
+
+var prevGender = null;
+var prevEnding = null;
+var prevNounBase = null;
+
+function setGenderButtonSelected(gender) {
+	document.getElementById(gender).innerHTML = "<font color=\"red\"><b>[" + gender + "]</b></font>";
+	
+	if (prevGender != null && prevGender != gender) {
+		document.getElementById(prevGender).innerHTML = prevGender;
+	}
+	
+	prevGender = gender;
+	prevEnding = null;
+	prevNounBase = null;
+}
+
+function setEndingButtonSelected(nounEnding) {
+	var n = script.translate(NounEnding[nounEnding]);
+	document.getElementById(nounEnding).innerHTML = "<font color=\"red\"><b>[" + n.getDeva() + " " + n.getIast()  + "]</b></font>";
+	
+	if (prevEnding != null && prevEnding != nounEnding) {
+		var p = script.translate(NounEnding[prevEnding])
+		document.getElementById(prevEnding).innerHTML = p.getDeva() + " " + p.getIast();
+	}
+	
+	prevEnding = nounEnding;
+	prevNounBase = null;
+}
+
+function setNounButtonSelected(nounBase) {
+	var noun = nouns.getNoun(nounBase);
+	var n = script.translate(noun.base);
+	document.getElementById(noun).innerHTML = "<font color=\"red\"><b>[" + n.getDeva() + " " + n.getIast()  + "]</b></font>";
+	
+	if (prevNounBase != null && prevNounBase != nounBase) {
+		var prevNoun = nouns.getNoun(prevNounBase);
+		var p = script.translate(prevNoun.base)
+		document.getElementById(prevNoun).innerHTML = p.getDeva() + " " + p.getIast();
+	}
+	
+	prevNounBase = nounBase;
+}
+
+function onMasculineNoun() {
+	var nounEndings = NounEndings[GrammarGender.Masculine];
+	setNounEndings(GrammarGender.Masculine, nounEndings);
+	setGenderButtonSelected("Masculine");
+}
+
+function onFeminineNoun() {
+	var nounEndings = NounEndings[GrammarGender.Feminine];
+	setNounEndings(GrammarGender.Feminine, nounEndings);
+	setGenderButtonSelected("Feminine");	
+}
+
+function onNeuterNoun() {
+	var nounEndings = NounEndings[GrammarGender.Neuter];
+	setNounEndings(GrammarGender.Neuter, nounEndings);
+	setGenderButtonSelected("Neuter");	
+}
+
+function setNounEndings(grammarGender, nounEndings) {
+	html = "<font><text>Select Noun Ending</text></font><BR>";
+	
+	for (var i = 0; i < nounEndings.length; i++) {
+		var nounEnding = nounEndings[i];
+		var n = script.translate(NounEnding[nounEnding]);
+		html += "<button id=\"" 
+			+ nounEnding 
+			+ "\" class=\"w3-btn w3-medium w3-round w3-khaki w3-padding-small w3-hover-blue\" onclick='onEnding(\"" 
+		    + grammarGender 
+			+ "\", \"" 
+			+ nounEnding 
+			+ "\")'>" 
+			+ n.getDeva() 
+			+ " " 
+			+ n.getIast() 
+			+ "</button>&nbsp;";
+	}
+
+	var txt = document.createElement("txt");
+	txt.innerHTML = html;
+	clearChildrenAndGet("ending").appendChild(txt);
+	clearChildrenAndGet("noun");
+	clearChildrenAndGet("table");
+}
+
+function onEnding(grammarGender, nounEnding) {
+	var nounList = nouns.getNouns(grammarGender, nounEnding);
+	drawNouns(nounList);
+	setEndingButtonSelected(nounEnding);
+}
+
+function drawNouns(nounList) {
+	html = "<font><text>Select Noun</text></font><BR>";
+	
+	for (var i = 0; i < nounList.length; i++) {
+		var noun = nounList[i];
+		var repr = noun.getRepr();
+		var n = script.translate(repr);
+		html += "<button id=\"" + repr + "\" class=\"w3-btn w3-medium w3-round w3-khaki w3-padding-small w3-hover-blue\" onclick=onNoun(\"" + repr + "\")>" + n.getDeva() + " " + n.getIast() + "</button>&nbsp;";
+		if (i > 0 && i % 6 == 0) {
+			html += "<br>";
+		}
+	}	
+
+	var txt = document.createElement("txt");
+	txt.innerHTML = html;
+	clearChildrenAndGet("noun").appendChild(txt);
+}
+
+function onNoun(base) {
+	var noun = nouns.getNoun(base);
+	drawNounTable(noun);
+	setNounButtonSelected(base);
+}
+
+function drawNounTable(noun) {
+	var cases = [GrammarCase.Nominative, GrammarCase.Vocative, GrammarCase.Accusative, GrammarCase.Instrumental, 
+		         GrammarCase.Ablative, GrammarCase.Dative, GrammarCase.Genetive, GrammarCase.Locative];
+	var numbers = [GrammarNumber.Singular, GrammarNumber.Plural];	
+	
+	var n1 = script.translate(noun.getRepr());
+	
+	var def = n1.getDeva() + " " + n1.getIast();
+
+	var otherBase = noun.getOtherBase();
+	if (otherBase != null) {
+		var n2 = script.translate(otherBase);
+		def += " / " + n2.getDeva() + " " + n2.getIast();
+	}
+	
+	html  = "<h2>" + def + " (" + noun.meanings + ")" + "</h2>";
+	html += "<table class=\"w3-table-all w3-card-4 w3-large\" style=\"width:100%\">";
+	html += "<tr><th>Case</th><th>Singular</th><th>Plural</th></tr>";
+		
+	for (var j = 0; j < cases.length; j++) {
+		var grammarCase = cases[j];
+
+		html += "<tr>";
+		html += "<td>" + grammarCase + "</td>";
+				
+		for (var k = 0; k < numbers.length; k++) {
+			var number = numbers[k];
+			
+			var cs = noun.getCase(grammarCase, number);	
+			
+			var result = "";
+			for (var l = 0; l < cs.length; l++) {
+				var x = script.translate(cs[l]);
+				result += x.getDeva() + " " + x.getIast() + "<br>";
+			}
+			
+			html += "<td>" +  result + "</td>";
+		}
+		
+		html += "</tr>";
+	}			
+		
+	var txt = document.createElement("txt");
+	txt.innerHTML = html;
+	clearChildrenAndGet("table").appendChild(txt);
+}
+
+window.onload = function() {
+}
+
+</SCRIPT>
+  
+</HEAD>
+
+<BODY>
+
+<header class="w3-container w3-teal w3-xlarge w3-center">
+	<h1>Noun Declensions</h1>
+</header>
+
+<BR>
+
+<div id="gender" class="w3-col w3-large s4 m4 l4 w3-card-2 w3-center w3-margin">
+	<font><text>Select Gender</text></font><BR>
+	<button id="Masculine" class="w3-button w3-khaki w3-hover-blue" onclick="onMasculineNoun()">Masculine</button>
+	<button id="Feminine" class="w3-button w3-khaki w3-hover-blue" onclick="onFeminineNoun()">Feminine</button>
+	<button id="Neuter" class="w3-button w3-khaki w3-hover-blue" onclick="onNeuterNoun()">Neuter</button>	
+</div>
+
+<div id="ending" class="w3-col w3-large s2 m2 l2 w3-card-2 w3-center w3-margin">
+</div>
+
+<div id="noun" class="w3-col w3-large s6 m6 l6 w3-card-2 w3-center w3-margin" style="width:100%; height:200px; overflow-y: scroll;">
+</div>
+
+<div class="w3-row-padding w3-center">
+   <div id="table" class="w3-col w3-xlarge s12 m12 l12"></div>
+</div>
+
+</BODY>
+</HTML>

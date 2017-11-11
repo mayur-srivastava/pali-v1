@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<HTML>
+
+<HEAD>
+
+<TITLE>P&#x0101;li Noun Flash Cards</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<SCRIPT src="js/dom.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/math.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/noun.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/nouns.js" type="text/javascript"></SCRIPT>
+  
+<SCRIPT type="text/javascript">
+
+var script = new PaliScript();
+var nouns = new Nouns();
+var totalNouns = nouns.getTotalNouns();
+
+function drawNoun(index) {
+	var noun = nouns.getNounAt(index);
+	
+	var n1 = script.translate(noun.base);
+	
+	var def = n1.getDeva() + " " + n1.getIast();
+
+	var otherBase = noun.getOtherBase();
+	if (otherBase != null) {
+		var n2 = script.translate(otherBase);
+		def += " / " + n2.getDeva() + " " + n2.getIast();
+	}
+	
+	var card = document.createElement("txt");
+	card.innerHTML = "<div>"
+	    + "<header class=\"w3-container w3-teal\"><b><h1>" + def + "</h1></b></header>"
+		+ "<br>"
+		+ "<div class=\"w3-container w3-center\"><p><h1>" + noun.meanings + "</h1></p></div>" 
+		+ "<div class=\"w3-container w3-center\"><p><font size=4>(" + noun.gender + ")</font></p></div>" 
+		+ "</div>";
+    clearChildrenAndGet("card").appendChild(card);
+
+	var prevIndex = index - 5 < 0 ? totalNouns + index - 5 : index - 5;
+	var prevInput = document.createElement("div");
+	prevInput.innerHTML = "<BR><BR><button class=\"w3-button w3-hover-blue w3-circle w3-teal\"onclick=\"drawNoun(" + prevIndex + ");\" /><font size=5><<-5</font></button>"
+	clearChildrenAndGet("prev5").appendChild(prevInput);
+	
+	prevIndex = index - 1 < 0 ? totalNouns - 1 : index - 1;
+	prevInput = document.createElement("div");
+	prevInput.innerHTML = "<BR><BR><button class=\"w3-button w3-hover-blue w3-circle w3-teal\"onclick=\"drawNoun(" + prevIndex + ");\" /><font size=5><<</font></button>"
+	clearChildrenAndGet("prev").appendChild(prevInput);
+	
+	var nextIndex = (index + 1) % totalNouns;
+	var nextInput = document.createElement("div");
+	nextInput.innerHTML = "<BR><BR><button class=\"w3-button w3-hover-blue w3-circle w3-teal\"onclick=\"drawNoun(" + nextIndex + ");\" /><font size=5>>></font></button>"
+	clearChildrenAndGet("next").appendChild(nextInput);	
+	
+	nextIndex = (index + 5) % totalNouns;
+	nextInput = document.createElement("div");
+	nextInput.innerHTML = "<BR><BR><button class=\"w3-button w3-hover-blue w3-circle w3-teal\"onclick=\"drawNoun(" + nextIndex + ");\" /><font size=5>&nbsp;+5>></font></button>"
+	clearChildrenAndGet("next5").appendChild(nextInput);
+	
+	document.getElementById("count").innerHTML = "<i>(Showing " + (index + 1) + " / " + totalNouns + ")</i>";
+}
+
+window.onload = function() {
+	drawNoun(0);
+}
+
+</SCRIPT>
+  
+</HEAD>
+
+<BODY>
+
+<header class="w3-container w3-teal w3-xlarge w3-center">
+	<h1>Noun Flash Cards</h1>
+</header>
+<br>
+
+<div class="w3-row-padding w3-center">
+	<div id="prev5" class="w3-col s1 m1 l1"></div>
+	<div id="prev" class="w3-col s1 m1 l1"></div>	
+	<div id="card" class="w3-col s8 m8 l8 w3-card-4 w3-center"></div>
+	<div id="next" class="w3-col s1 m1 l1"></div>
+	<div id="next5" class="w3-col s1 m1 l1"></div>	
+</div>
+
+<BR>
+<BR>
+<div id="count"></div>
+
+<br>
+</BODY>
+</HTML>
+

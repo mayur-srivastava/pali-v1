@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<HTML>
+
+<HEAD>
+
+<TITLE>P&#x0101;li Random Verb Flash Cards</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<SCRIPT src="js/dom.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/math.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/verb.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/verbs.js" type="text/javascript"></SCRIPT>
+
+  
+<SCRIPT type="text/javascript">
+
+var script = new PaliScript();
+var verbs = new Verbs();
+var totalVerbs = verbs.getTotalVerbs();
+
+function randomVerb() {
+	var verb = verbs.getRandomVerb();
+	
+	var n1 = script.translate(verb.getRepr());
+	var def = n1.getDeva() + " " + n1.getIast();
+	
+	var card = document.createElement("txt");
+	card.innerHTML = "<div class=\"w3-card-4 w3-center\" style=\"width:60%\">"
+	    + "<header class=\"w3-container w3-teal\"><b><h1>" + def + "</h1></b></header>"
+		+ "<br>"
+		+ "<div class=\"w3-container w3-center\"><p><h1>" + verb.meanings + "</h1></p></div>" 
+		+ "</div>";
+    clearChildrenAndGet("card").appendChild(card);
+	
+	document.getElementById("count").innerHTML = "<i>(Total: " + totalVerbs + ")</i>";	
+}
+
+window.onload = function() {
+	randomVerb();
+}
+
+</SCRIPT>
+  
+</HEAD>
+
+<BODY>
+
+<header class="w3-container w3-teal w3-xlarge w3-center">
+	<h1>Random Verb Flash Cards</h1>
+</header>
+<br>
+
+
+<div id="card"></div>
+
+<BR>
+<BR>
+<div id="count"></div>
+
+<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="w3-right-align w3-button w3-hover-blue w3-circle w3-teal" onclick="randomVerb()"><font size=8>&nbsp;Next >>&nbsp;</font></button>&nbsp;
+<br>
+
+</BODY>
+</HTML>
+

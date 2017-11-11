@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<HTML>
+
+<HEAD>
+
+<TITLE>P&#x0101;li Sentences</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<SCRIPT src="js/math.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/dom.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/verb.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/verbs.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/noun.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/nouns.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/sentences.js" type="text/javascript"></SCRIPT>
+
+  
+<SCRIPT type="text/javascript">
+	
+var script = new PaliScript();
+var nouns = new Nouns();
+var verbs = new Verbs();
+
+
+window.onload = function() {
+	var s1 = new Sentence1(nouns.getNoun("ks,sk"), verbs.getVerb("ks"));
+	var s11 = s1.make(GrammarNumber.Singular);
+	s11 = s11.join(" ");
+	var x = script.translate(s11);
+
+	var s2 = new Sentence2(nouns.getNoun("put,t"), verbs.getVerb("ps,s"), nouns.getNoun("nr"));
+	var s22 = s2.make(GrammarNumber.Singular);
+	s22 = s22.join(" ");
+	var y = script.translate(s22);
+
+	var txt = document.createElement("txt");
+	txt.innerHTML = x.getDeva() + " " + x.getIast() 
+		+ "<BR>"
+		+ y.getDeva() + " " + y.getIast();
+	clearChildrenAndGet("panel").appendChild(txt);
+}
+
+</SCRIPT>
+</HEAD>
+
+<BODY>
+
+<header class="w3-container w3-teal w3-xlarge w3-center">
+	<h1>Sentences (Present tense, Active voice) [Under development]</h1>
+</header>
+
+<BR>
+
+<div id="panel" class="w3-col w3-large s12 m12 l12 w3-card-2 w3-center w3-margin">
+</div>
+
+	
+</BODY>
+</HTML>

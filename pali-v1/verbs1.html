@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<HTML>
+
+<HEAD>
+
+<TITLE>P&#x0101;li Verbs</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<SCRIPT src="js/math.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/dom.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/verb.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/verbs.js" type="text/javascript"></SCRIPT>
+  
+<SCRIPT type="text/javascript">
+	
+var script = new PaliScript();
+var verbs = new Verbs();
+
+var prevSuffix = null;
+var prevBase = null;
+
+function setSuffixButtonSelected(verbSuffix) {
+	var n = script.translate(VerbSuffix[verbSuffix]);
+	document.getElementById(verbSuffix).innerHTML = "<font color=\"red\"><b>[" + n.getDeva() + " " + n.getIast()  + "]</b></font>";
+	
+	if (prevSuffix != null && prevSuffix != verbSuffix) {
+		var p = script.translate(VerbSuffix[prevSuffix])
+		document.getElementById(prevSuffix).innerHTML = p.getDeva() + " " + p.getIast();
+	}
+	
+	prevSuffix = verbSuffix;
+	prevBase = null;
+}
+
+function setVerbButtonSelected(base, suffix) {
+	var verb = verbs.getVerb(base);
+	var n = script.translate(verb.getRepr(suffix));
+	document.getElementById(base).innerHTML = "<font color=\"red\"><b>[" + n.getDeva() + " " + n.getIast()  + "]</b></font>";
+	
+	if (prevBase != null && prevBase != base) {
+		var prev = verbs.getVerb(prevBase);
+		var p = script.translate(prev.getRepr(suffix))
+		document.getElementById(prevBase).innerHTML = p.getDeva() + " " + p.getIast();
+	}
+	
+	prevBase = base;
+}
+
+function setVerbSuffixes(verbSuffixes) {
+	html = "<font><text>Select Verb Suffix</text></font><BR>";
+	
+	for (var i = 0; i < verbSuffixes.length; i++) {
+		var verbSuffix = verbSuffixes[i];
+		var n = script.translate(VerbSuffix[verbSuffix]);
+		html += "<button id=\"" 
+			+ verbSuffix
+			+ "\" class=\"w3-btn w3-medium w3-round w3-khaki w3-padding-small w3-hover-blue\" onclick='onSuffix(\"" 
+			+ verbSuffix 
+			+ "\")'>" 
+			+ n.getDeva() 
+			+ " " 
+			+ n.getIast() 
+			+ "</button>&nbsp;";
+	}
+
+	var txt = document.createElement("txt");
+	txt.innerHTML = html;
+	clearChildrenAndGet("suffix").appendChild(txt);
+	clearChildrenAndGet("verb");
+	clearChildrenAndGet("table");
+}
+
+function onSuffix(suffix) {
+	var verbList = verbs.getVerbs(suffix);
+	drawVerbs(verbList, suffix);
+	setSuffixButtonSelected(suffix);
+}
+
+function drawVerbs(verbList, suffix) {
+	html = "<font><text>Select Verb</text></font><BR>";
+	
+	for (var i = 0; i < verbList.length; i++) {
+		var verb = verbList[i];
+		var repr = verb.getRepr(suffix);
+		var n = script.translate(repr);
+		html += "<button id='" 
+			+ verb.base 
+			+ "' class='w3-btn w3-medium w3-round w3-khaki w3-padding-small w3-hover-blue' onclick=\"onVerb('" 
+			+ verb.base 
+			+ "', '" 
+			+ suffix 
+			+ "')\">" 
+			+ n.getDeva() 
+			+ " " 
+			+ n.getIast() 
+			+ "</button>&nbsp;";
+		if (i > 0 && i % 6 == 0) {
+			html += "<br>";
+		}
+	}	
+	console.log(html);
+
+	var txt = document.createElement("txt");
+	txt.innerHTML = html;
+	clearChildrenAndGet("verb").appendChild(txt);
+}
+
+function onVerb(base, suffix) {
+	var verb = verbs.getVerb(base);
+	drawVerbTable(verb, suffix);
+	setVerbButtonSelected(base, suffix);
+}
+
+function drawVerbTable(verb, suffix) {
+	var persons = [Person.Third, Person.Second, Person.First];
+	var numbers = [GrammarNumber.Singular, GrammarNumber.Plural];	
+	
+	var n1 = script.translate(verb.getRepr(suffix));
+	var def = n1.getDeva() + " " + n1.getIast() + " (" + verb.meanings + ")" ;
+
+	if (verb.root != null) {
+		var x = script.translate(verb.root);
+		def += "<br>[&Sqrt;" + x.getDeva() + " " + x.getIast() + "]";
+	}		
+	
+	html  = "<h2>" + def + "</h2>";
+	html += "<table class=\"w3-table-all w3-card-4 w3-large\" style=\"width:100%\">";
+	html += "<tr><th>Person</th><th>Singular</th><th>Plural</th></tr>";
+		
+	for (var j = 0; j < persons.length; j++) {
+		var person = persons[j];
+
+		html += "<tr>";
+		html += "<td>" + person + "</td>";
+				
+		for (var k = 0; k < numbers.length; k++) {
+			var number = numbers[k];
+			
+			var cs = verb.getPresentActiveConjugation(person, number, suffix);
+			
+			var result = "";
+			for (var l = 0; l < cs.length; l++) {
+				var x = script.translate(cs[l]);
+				result += x.getDeva() + " " + x.getIast() + "<br>";
+			}
+			
+			html += "<td>" +  result + "</td>";
+		}
+		
+		html += "</tr>";
+	}			
+		
+	var txt = document.createElement("txt");
+	txt.innerHTML = html;
+	clearChildrenAndGet("table").appendChild(txt);
+}
+
+window.onload = function() {
+	setVerbSuffixes(VerbSuffixes);
+}
+
+</SCRIPT>
+  
+</HEAD>
+
+<BODY>
+
+<header class="w3-container w3-teal w3-xlarge w3-center">
+	<h1>Verb Conjugation (Present tense, Active voice)</h1>
+</header>
+
+<BR>
+
+<div id="suffix" class="w3-col w3-large s2 m2 l2 w3-card-2 w3-center w3-margin">
+</div>
+
+<div id="verb" class="w3-col w3-large s6 m6 l6 w3-card-2 w3-center w3-margin" style="width:100%; height:200px; overflow-y: scroll;">
+</div>
+
+<div class="w3-row-padding w3-center">
+   <div id="table" class="w3-col w3-xlarge s12 m12 l12"></div>
+</div>
+
+<br>
+
+</BODY>
+</HTML>

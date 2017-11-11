@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+
+<TITLE>Type P&#x0101;li</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/noun.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/nouns.js" type="text/javascript"></SCRIPT>
+
+<SCRIPT type="text/javascript">
+
+window.onload = function() {
+	var script = new PaliScript();
+	var nouns = new Nouns();
+
+	var outD = document.getElementById("Deva");
+	var outI = document.getElementById("IAST");
+	var inE  = document.getElementById("English");
+
+	function getLegend() {
+		html = "<table class=\"w3-table-all w3-card-4 w3-medium\">";
+		var tr = null;
+		for (var i = 0; i < script.letters.length; i++) {
+			if (i == 0 || i == 8 || (i > 8 && i <= 41 && (i - 8) % 5 == 0) || i == 41 || i == 48 || i == 51 || i == 56) {
+				html += "<tr>";
+			}
+			var letter = script.letters[i];
+			var deva = script.devaMap.get(letter);
+			var iast = script.iastMap.get(letter);
+			html += "<td>" + letter + " = " + deva + " " + iast + "</td>";
+		}
+		html += "</table>";
+		return html;
+	}
+	
+	function draw() {
+		var result = script.translate(inE.value);
+		outD.value = result.getDeva();
+		outI.value = result.getIast();
+		setTimeout(draw, 200);
+	}
+
+	document.getElementById("legend").innerHTML = getLegend();
+	setTimeout(draw, 200);
+}
+
+</SCRIPT>
+</HEAD>
+
+<BODY>
+	<br>
+	&nbsp;
+	<TEXTAREA rows="2" cols="64" id="Deva" readonly></TEXTAREA>
+	<br>
+	&nbsp;
+	<TEXTAREA rows="2" cols="64" id="IAST" readonly></TEXTAREA>
+	<br>
+	&nbsp;
+	<TEXTAREA rows="2" cols="64" id="English" autofocus></TEXTAREA>
+	<br>
+	<h1>P&#x0101;li Transliteration</h1>
+	<DIV id="legend"></DIV>
+	<BR>
+
+	<div class="w3-card">
+		<h3>Tips:</h3> 
+		<ul>
+			<li>If a word begins with a vowel, use upper case letters (see the encoding).</li>
+			<li>There is not need to type <b>a &#x0905</b> except when a word begins with it.</li>
+			<li>Use <b>,</b> for halanta consonants.</li>
+			<li>English to devanagari character mapping is greedy, use <b>?</b> to stop matching before '?'.</li>
+		</ul>
+	</div>
+	<BR>
+
+</BODY>
+</HTML>

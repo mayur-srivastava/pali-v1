@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+<TITLE>P&#x0101;li Nouns Quiz#1</TITLE>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<SCRIPT src="js/arrays.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/math.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/error.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/dom.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/trans.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/def.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/noun.js" type="text/javascript"></SCRIPT>	
+<SCRIPT src="js/nouns.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/nounsview.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/pali_games1.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/quiz_noun_pali_to_eng.js" type="text/javascript"></SCRIPT>
+  
+<SCRIPT type="text/javascript">
+ 
+var underlyingNouns = new Nouns();
+var nouns;
+
+function question(answerNoun) {
+	var n = script.translate(answerNoun.base);
+	var txt = "<div class=\"w3-medium w3-orange\"><b><font size=\"10\">&nbsp;&nbsp;&nbsp;" 
+		+ n.getDeva() 
+		+ " "
+		+ n.getIast()
+		+ "&nbsp;&nbsp;&nbsp;</font></b></div>";
+    var div = document.createElement("div");
+	div.innerHTML = txt;
+    clearChildrenAndGet("question").appendChild(div);
+}
+
+function randomFn(queue) {
+	var index = getQuestionIndex(queue);
+	if (index != -1) {
+		return nouns.getNoun(queue[index]);
+	} else {
+		return nouns.getRandomNoun();
+	}
+}
+
+function getAnswer(object) {
+	return object.meanings;
+}
+
+function getMaxQuestions() {
+	return underlyingNouns.getTotalNouns();
+}
+
+function setView(max) {
+	nouns = new NounsView(underlyingNouns, 0, max);
+}
+
+window.onload = function() {
+	setLevels();
+}
+
+</SCRIPT>
+</HEAD>
+
+<BODY>
+
+<header class="w3-container w3-teal w3-xlarge w3-center">
+	&nbsp; 
+	<font size="10">
+		<b>&nbsp;&nbsp;&nbsp;P&#x0101;li Nouns Quiz#1: P&#x0101;li to English</b>
+	</font>
+</header>
+
+<BR>
+
+<div id="levels" class="w3-row-padding w3-center">
+</div>
+
+<div class="w3-row-padding w3-center">
+	<div id="question" class="w3-col w3-xxlarge s12 m12 l12 w3-card-2 w3-center w3-margin"></div>
+</div>
+ 
+<div class="w3-row-padding w3-center">
+    <div id="options" class="w3-col w3-xlarge s12 m12 l12 w3-card-2 w3-center w3-margin"></div>
+</div>
+
+<br>
+<br>
+
+<div class="w3-row-padding w3-center">
+	<div id="score" class="w3-col w3-large s12 m12 l12 w3-card-2 w3-center w3-margin"></div>
+</div>
+
+<br>
+
+</BODY>
+</HTML>
