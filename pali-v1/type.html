@@ -53,26 +53,35 @@ window.onload = function() {
 <BODY>
 	<br>
 	&nbsp;
-	<TEXTAREA rows="2" cols="64" id="Deva" readonly></TEXTAREA>
+	<TEXTAREA rows="2" cols="64" id="English" placeholder="Type here in English encoding (as described below)" autofocus></TEXTAREA>
 	<br>
 	&nbsp;
-	<TEXTAREA rows="2" cols="64" id="IAST" readonly></TEXTAREA>
+	<TEXTAREA rows="2" cols="64" id="Deva" placeholder="Devanagari" readonly></TEXTAREA>
 	<br>
 	&nbsp;
-	<TEXTAREA rows="2" cols="64" id="English" autofocus></TEXTAREA>
+	<TEXTAREA rows="2" cols="64" id="IAST" placeholder="IAST" readonly></TEXTAREA>
 	<br>
-	<h1>P&#x0101;li Transliteration</h1>
+	<h3>P&#x0101;li Transliteration Language (Encoding)</h3>
 	<DIV id="legend"></DIV>
 	<BR>
 
 	<div class="w3-card">
-		<h3>Tips:</h3> 
+		<h3>Rules:</h3> 
 		<ul>
-			<li>If a word begins with a vowel, use upper case letters (see the encoding).</li>
+			<li>If a word begins with a Devanagari vowel, use upper case notation in the encoding.</li>
 			<li>There is not need to type <b>a &#x0905</b> except when a word begins with it.</li>
-			<li>Use <b>,</b> for halanta consonants.</li>
-			<li>English to devanagari character mapping is greedy, use <b>?</b> to stop matching before '?'.</li>
+			<li>The encoding matching is greedy, i.e. it tries to match longest sequence of letters in the Encoding, e.g. jhaj is translated to jh&#x0101;ja &#x091D;&#x093E;&#x091C;To stop the greedy matching at the character, add a '?' suffix, e.g. type j?haj to get jah&#x0101;ja &#x091C;&#x0939;&#x093E;&#x091C;.</li>
+			<li>Use <b>,</b> for halanta consonants, e.g. pha is translated to pha &#x092B; and not as pha &#x092A;&#x094d;&#x0939;. To get halanta p, add a '?' suffix, e.g. to make pha &#x092A;&#x094d;&#x0939; type p,ha.</li>
 		</ul>
+	</div>
+	
+	<div class="w3-card">
+		<h3>Examples:</h3>
+		<ul>
+			<li>bud,dh. srn. gc,chami dhm,m. srn. gc,chami snga,gh. srn. gc,chami| &#x092C;&#x0941;&#x0926;&#x094D;&#x0927;&#x0902; &#x0938;&#x0930;&#x0928;&#x0902; &#x0917;&#x091A;&#x094D;&#x091B;&#x093E;&#x092E;&#x093F; &#x0927;&#x092E;&#x094D;&#x092E;&#x0902; &#x0938;&#x0930;&#x0928;&#x0902; &#x0917;&#x091A;&#x094D;&#x091B;&#x093E;&#x092E;&#x093F; &#x0938;&#x0919;&#x094D;&#x0918;&#x0902; &#x0938;&#x0930;&#x0928;&#x0902; &#x0917;&#x091A;&#x094D;&#x091B;&#x093E;&#x092E;&#x093F;&#x0964;</li>
+			<li>Imay dhm,manudhm,mpttipt,tiya bud,dh. poojemi dhm,m. poojemi snga,gh. poojemi| &#x0907;&#x092E;&#x093E;&#x092F; &#x0927;&#x092E;&#x094D;&#x092E;&#x093E;&#x0928;&#x0941;&#x0927;&#x092E;&#x094D;&#x092E;&#x092A;&#x091F;&#x093F;&#x092A;&#x0924;&#x094D;&#x0924;&#x093F;&#x092F;&#x093E; &#x092C;&#x0941;&#x0926;&#x094D;&#x0927;&#x0902; &#x092A;&#x0942;&#x091C;&#x0947;&#x092E;&#x093F; &#x0927;&#x092E;&#x094D;&#x092E;&#x0902; &#x092A;&#x0942;&#x091C;&#x0947;&#x092E;&#x093F; &#x0938;&#x0919;&#x094D;&#x0918;&#x0902; &#x092A;&#x0942;&#x091C;&#x0947;&#x092E;&#x093F;&#x0964;</li>
+			<li>nmo ts,s bhgvto Arhto sm,ma sm,bud,dhs| &#x0928;&#x092E;&#x094B; &#x0924;&#x0938;&#x094D;&#x0938; &#x092D;&#x0917;&#x0935;&#x0924;&#x094B; &#x0905;&#x0930;&#x0939;&#x0924;&#x094B; &#x0938;&#x092E;&#x094D;&#x092E;&#x093E; &#x0938;&#x092E;&#x094D;&#x092C;&#x0941;&#x0926;&#x094D;&#x0927;&#x0938;&#x0964;</li>
+		<ul>
 	</div>
 	<BR>
 
